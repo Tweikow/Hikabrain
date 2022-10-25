@@ -1,6 +1,8 @@
 package fr.tweikow.hikabrain;
 
+import fr.tweikow.hikabrain.commands.Hikabrain;
 import fr.tweikow.hikabrain.events.PlayerManager;
+import fr.tweikow.hikabrain.events.PlayerMove;
 import fr.tweikow.hikabrain.utils.StatsGame;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
@@ -13,9 +15,12 @@ public class Main extends JavaPlugin {
     @Override
     public void onEnable() {
         instance = this;
+        saveDefaultConfig();
         StatsGame.setStatus(StatsGame.WAITING);
 
         Bukkit.getPluginManager().registerEvents(new PlayerManager(), this);
+        Bukkit.getPluginManager().registerEvents(new PlayerMove(), this);
+        getCommand("hikabrain").setExecutor(new Hikabrain());
 
         log(this.getName() + " §ais Enable !");
     }

@@ -1,0 +1,27 @@
+#=============================#
+#    Développer par Tweikow   #
+# https://github.com/Tweikow/ #
+#=============================#
+
+hikabrain:
+  permission: "hikabrain.staff"
+  waiting_max: 2
+  team:
+    bleu:
+      spawn:
+      # Pour définir le lit: il faut posé des blocs de laine Bleu
+    rouge:
+      spawn:
+      # Pour définir le lit: il faut posé des blocs de laine Rouge
+
+messages:
+  no-permission: "&7[&6&lHikabrain&7] &8≫ &cVous n'avez pas la permission requise !"
+  setMaxWaitingPlayers: "&7[&6&lHikabrain&7] &8≫ &eVous venez de définir le nombre maximum de joueurs !"
+  help:
+    - "&7[&6&lHikabrain&7] &8≫ &eCommandes d'aide:"
+    - "&8≫ &e/hikabrain join &8≫ &7Permet de rejoindre la file d'attente"
+    - "&8≫ &e/hikabrain leave &8≫ &7Permet de quitter la file d'attente"
+    - "&8≫ &e/hikabrain forcestart &8≫ &7Permet de lancer la partie"
+    - "&8≫ &e/hikabrain restart &8≫ &7Permet de relancer la partie"
+    - "&8≫ &e/hikabrain set team <bleu/rouge> &8≫ &7Permet de définir le point d'apparition des équipes"
+    - "&8≫ &e/hikabrain set maxplayers <nombre> &8≫ &7Permet de définir le nombre maximum de joueur par equipe"

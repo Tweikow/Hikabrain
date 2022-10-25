@@ -6,10 +6,7 @@ public enum StatsGame {
 
     private static StatsGame status;
 
-    public static StatsGame getStatus() {
-        return status;
-    }
-    public static void setStatus(StatsGame status) {
-        StatsGame.status = status;
-    }
+    public static StatsGame getStatus() {return status;}
+
+    public static void setStatus(StatsGame status) {StatsGame.status = status;}
 }
