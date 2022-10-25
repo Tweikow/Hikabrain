@@ -202,8 +202,7 @@ public class Manager {
     public static boolean isColoredWool(Block block, DyeColor color) {
         if (block.getType() == Material.WOOL) {
             Wool wool = (Wool) block.getState().getData();
-            if (wool.getColor() == color)
-                return true;
+            return wool.getColor() == color;
         }
         return false;
     }
