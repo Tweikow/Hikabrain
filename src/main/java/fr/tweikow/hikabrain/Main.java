@@ -1,6 +1,8 @@
 package fr.tweikow.hikabrain;
 
 import fr.tweikow.hikabrain.commands.Hikabrain;
+import fr.tweikow.hikabrain.events.BlockManager;
+import fr.tweikow.hikabrain.events.ChatEvent;
 import fr.tweikow.hikabrain.events.PlayerManager;
 import fr.tweikow.hikabrain.events.PlayerMove;
 import fr.tweikow.hikabrain.utils.StatsGame;
@@ -20,6 +22,8 @@ public class Main extends JavaPlugin {
 
         Bukkit.getPluginManager().registerEvents(new PlayerManager(), this);
         Bukkit.getPluginManager().registerEvents(new PlayerMove(), this);
+        Bukkit.getPluginManager().registerEvents(new ChatEvent(), this);
+        Bukkit.getPluginManager().registerEvents(new BlockManager(), this);
         getCommand("hikabrain").setExecutor(new Hikabrain());
 
         log(this.getName() + " §ais Enable !");

@@ -2,7 +2,6 @@ package fr.tweikow.hikabrain.commands;
 
 import fr.tweikow.hikabrain.Main;
 import fr.tweikow.hikabrain.utils.Manager;
-import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -27,9 +26,11 @@ public class Hikabrain implements CommandExecutor {
             if (args[0].equalsIgnoreCase("join"))
                 Manager.joinWaiting(player);
             if (args[0].equalsIgnoreCase("leave"))
-                Manager.quitWaiting(player);
-            if (args[0].equalsIgnoreCase("forcestart"))
+                Manager.quit(player);
+            if (args[0].equalsIgnoreCase("start"))
                 Manager.startGame();
+            if (args[0].equalsIgnoreCase("restart"))
+                Manager.restartGame();
         }
         if (args.length == 3) {
             if (args[0].equalsIgnoreCase("set")) {

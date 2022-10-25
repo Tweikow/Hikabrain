@@ -6,6 +6,8 @@
 hikabrain:
   permission: "hikabrain.staff"
   waiting_max: 2
+  dead_zone:
+    y: 7
   team:
     bleu:
       spawn:
@@ -21,7 +23,7 @@ messages:
     - "&7[&6&lHikabrain&7] &8≫ &eCommandes d'aide:"
     - "&8≫ &e/hikabrain join &8≫ &7Permet de rejoindre la file d'attente"
     - "&8≫ &e/hikabrain leave &8≫ &7Permet de quitter la file d'attente"
-    - "&8≫ &e/hikabrain forcestart &8≫ &7Permet de lancer la partie"
+    - "&8≫ &e/hikabrain start &8≫ &7Permet de lancer la partie"
     - "&8≫ &e/hikabrain restart &8≫ &7Permet de relancer la partie"
     - "&8≫ &e/hikabrain set team <bleu/rouge> &8≫ &7Permet de définir le point d'apparition des équipes"
     - "&8≫ &e/hikabrain set maxplayers <nombre> &8≫ &7Permet de définir le nombre maximum de joueur par equipe"
