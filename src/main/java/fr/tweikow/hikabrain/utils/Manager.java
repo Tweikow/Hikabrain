@@ -7,19 +7,20 @@ import org.bukkit.entity.Player;
 import org.bukkit.material.Wool;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
 
 public class Manager {
 
     private static Integer waiting = 0;
     private static Integer waiting_max = 2;
 
+    public static HashMap<String, String> players = new HashMap<String, String>();
+
     public static List<String> waiting_players = new ArrayList<String>();
     public static List<String> team_blue = new ArrayList<String>();
+    public static Integer score_blue = 0;
     public static List<String> team_red = new ArrayList<String>();
+    public static Integer score_red = 0;
     public static List<String> spectators = new ArrayList<String>();
     public static List<Location> blocks = new ArrayList<Location>();
 
@@ -64,28 +65,42 @@ public class Manager {
     }
 
     public static void addSpectator(Player player) {
-        if (!Manager.spectators.contains(player.getUniqueId().toString())) {
-            Manager.spectators.add(player.getUniqueId().toString());
-            player.setGameMode(GameMode.SPECTATOR);
-            player.sendMessage("§eVous êtes actuellement Spectateur de la partie.");
+        Manager.spectators.add(player.getUniqueId().toString());
+        player.setGameMode(GameMode.SPECTATOR);
+        player.sendMessage("§eVous êtes actuellement Spectateur de la partie.");
+    }
+
+    public static void addScore(String team) {
+        if (team.equalsIgnoreCase("bleu")) {
+            Manager.score_blue++;
+            for (Player player : Bukkit.getOnlinePlayers())
+                player.sendTitle("§eL'équipe §9Bleu §eà marqué !", "§eScore: §9" + Manager.score_blue, 15,75,15);
+        }
+        if (team.equalsIgnoreCase("rouge")) {
+            Manager.score_red   ++;
+            for (Player player : Bukkit.getOnlinePlayers())
+                player.sendTitle("§eL'équipe §cRouge §eà marqué !", "§eScore: §c" + Manager.score_red, 15,75,15);
         }
     }
 
     public static void joinInGame(Player player) {
         player.setGameMode(GameMode.SURVIVAL);
-        if (Manager.team_red.contains(player.getUniqueId().toString())) {
+        String team = players.get(player.getUniqueId().toString());
+        if (team.equalsIgnoreCase("rouge")) {
+            team_red.add(player.getUniqueId().toString());
             InvManager.sendStuff(player, "rouge");
             player.teleport((Location) Main.instance.getConfig().get("hikabrain.team.rouge.spawn"));
             Bukkit.broadcastMessage("§c" + player.getName() + " §evient de se reconnecter !");
             player.setPlayerListName("§c" + player.getName());
         }
-        if (Manager.team_blue.contains(player.getUniqueId().toString())) {
+        if (team.equalsIgnoreCase("bleu")) {
+            team_blue.add(player.getUniqueId().toString());
             InvManager.sendStuff(player, "bleu");
             player.teleport((Location) Main.instance.getConfig().get("hikabrain.team.bleu.spawn"));
             Bukkit.broadcastMessage("§9" + player.getName() + " §evient de se reconnecter !");
             player.setPlayerListName("§9" + player.getName());
         }
-        if (!Manager.spectators.contains(player.getUniqueId().toString()))
+        if (hasNoTeam(player) && !Manager.spectators.contains(player.getUniqueId().toString()))
             addSpectator(player);
     }
 
@@ -142,11 +157,37 @@ public class Manager {
         }
         if (StatsGame.getStatus() == StatsGame.INGAME) {
             Bukkit.broadcastMessage(player.getName() + " §evient de se déconnecter");
-            if (team_blue.size() == 0 || team_red.size() == 0)
+            removeTeam(player);
+            if (team_blue.size() == 0 || team_red.size() == 0) {
                 Bukkit.broadcastMessage("§cSi aucun joueur de l'équipe adverse ne se reconnecte, vous serez vainqueur de la partie !");
+                new BukkitRunnable() {
+                    int i = 10;
+                    public void run() {
+                        if (i == 0) {
+                            finishGame();
+                            Bukkit.broadcastMessage("§cLa partie est désormais terminé ! Raison: Abandon !");
+                            cancel();
+                        }
+                        i--;
+                    }
+                }.runTaskTimer(Main.instance, 0, 20);
+            }
         }
         if (Manager.spectators.contains(player.getUniqueId().toString()))
             Manager.spectators.remove(player.getUniqueId().toString());
+    }
+
+    public static void finishGame() {
+        StatsGame.setStatus(StatsGame.FINISH);
+        Player p;
+        for (String player : players.keySet()) {
+            p = Bukkit.getPlayer(UUID.fromString(player));
+            p.setAllowFlight(true);
+            if (score_blue > score_red)
+                p.sendTitle("§eLa partie est désormais terminé !", "§6Les vainqueurs sont : §7[§9Bleu§7]", 15, 150, 15);
+            else
+                p.sendTitle("§eLa partie est désormais terminé !", "§6Les vainqueurs sont : §7[§cRouge§7]", 15,150,15);
+        }
     }
 
     public static void startGame() {
@@ -157,6 +198,7 @@ public class Manager {
             player = Bukkit.getPlayer(UUID.fromString(value));
             if (hasNoTeam(player) && team_red.size() < (waiting_max/2)) {
                 team_red.add(value);
+                players.put(player.getUniqueId().toString(), "rouge");
                 InvManager.sendStuff(player, "rouge");
                 player.teleport((Location) Main.instance.getConfig().get("hikabrain.team.rouge.spawn"));
                 player.setPlayerListName("§c" + Bukkit.getPlayer(UUID.fromString(value)).getName());
@@ -164,6 +206,7 @@ public class Manager {
             }
             if (hasNoTeam(player) && team_blue.size() < (waiting_max/2)) {
                 team_blue.add(value);
+                players.put(player.getUniqueId().toString(), "bleu");
                 InvManager.sendStuff(player, "bleu");
                 player.teleport((Location) Main.instance.getConfig().get("hikabrain.team.bleu.spawn"));
                 player.setPlayerListName("§9" + Bukkit.getPlayer(UUID.fromString(value)).getName());
@@ -176,16 +219,32 @@ public class Manager {
     }
 
     public static void restartGame() {
+        waiting = 0;
+        score_red = 0;
+        score_blue = 0;
+
+        players.clear();
         spectators.clear();
         waiting_players.clear();
-        waiting = 0;
         team_red.clear();
         team_blue.clear();
+
         StatsGame.setStatus(StatsGame.WAITING);
         removeBlocks();
 
         for (Player player : Bukkit.getOnlinePlayers())
             joinWaiting(player);
+    }
+
+    public static void removeTeam(Player player) {
+        if (team_blue.contains(player.getUniqueId().toString()))
+            team_blue.remove(player.getUniqueId().toString());
+
+        if (team_red.contains(player.getUniqueId().toString()))
+            team_red.remove(player.getUniqueId().toString());
+
+        if (spectators.contains(player.getUniqueId().toString()))
+            spectators.remove(player.getUniqueId().toString());
     }
 
     public static void removeBlocks() {
@@ -197,6 +256,20 @@ public class Manager {
 
     public static boolean hasNoTeam(Player player) {
         return !team_blue.contains(player.getUniqueId().toString()) && !team_red.contains(player.getUniqueId().toString());
+    }
+
+    public static void teamTeleport() {
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            player.getInventory().clear();
+            if (Manager.team_red.contains(player.getUniqueId().toString())) {
+                InvManager.sendStuff(player, "rouge");
+                player.teleport((Location) Main.instance.getConfig().get("hikabrain.team.rouge.spawn"));
+            }
+            if (Manager.team_blue.contains(player.getUniqueId().toString())) {
+                InvManager.sendStuff(player, "bleu");
+                player.teleport((Location) Main.instance.getConfig().get("hikabrain.team.bleu.spawn"));
+            }
+        }
     }
 
     public static boolean isColoredWool(Block block, DyeColor color) {

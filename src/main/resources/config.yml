@@ -6,8 +6,9 @@
 hikabrain:
   permission: "hikabrain.staff"
   waiting_max: 2
+  points: 5 # Nombre de point requis pour terminé la partie
   dead_zone:
-    y: 7
+    y: 7 # Permet de définir la hauteur qui vous fait respawn ( Chute dans le vide )
   team:
     bleu:
       spawn:
