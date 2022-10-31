@@ -1,7 +1,7 @@
 package fr.tweikow.hikabrain.board;
 
 import fr.tweikow.hikabrain.Main;
-import fr.tweikow.hikabrain.utils.Manager;
+import fr.tweikow.hikabrain.managers.GameManager;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -27,8 +27,8 @@ public class Scoreboard {
                 board.updateTitle("§6§lSolar§f§lMC");
                 board.updateLines(ChatColor.GRAY + date,
                         "§1 ",
-                        "§cRouge§f: " + Manager.score_red,
-                        "§3Bleu§f: " + Manager.score_blue,
+                        "§cRouge§f: " + GameManager.score_red,
+                        "§3Bleu§f: " + GameManager.score_blue,
                         "§2 ",
                         "§7Objectif: " + Main.instance.getConfig().getInt("hikabrain.points") + " §7points",
                         "§3 ",

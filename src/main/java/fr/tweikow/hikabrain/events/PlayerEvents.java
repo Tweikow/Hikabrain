@@ -3,8 +3,8 @@ package fr.tweikow.hikabrain.events;
 import fr.tweikow.hikabrain.Main;
 import fr.tweikow.hikabrain.board.FastBoard;
 import fr.tweikow.hikabrain.board.Scoreboard;
-import fr.tweikow.hikabrain.utils.Manager;
-import fr.tweikow.hikabrain.utils.StatsGame;
+import fr.tweikow.hikabrain.managers.GameManager;
+import fr.tweikow.hikabrain.managers.StateGame;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -16,7 +16,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
-public class PlayerManager implements Listener {
+public class PlayerEvents implements Listener {
 
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
@@ -25,18 +25,18 @@ public class PlayerManager implements Listener {
         Scoreboard.send(player);
 
         event.setJoinMessage("");
-        if (!Manager.waiting_players.contains(player.getUniqueId().toString())) {
-            if (StatsGame.getStatus() == StatsGame.WAITING) {
+        if (!GameManager.waiting_players.contains(player.getUniqueId().toString())) {
+            if (StateGame.getStatus() == StateGame.WAITING) {
                 player.setHealth(player.getMaxHealth());
                 player.setFoodLevel(20);
-                Manager.joinWaiting(player);
+                GameManager.joinWaiting(player);
             }
-            if (StatsGame.getStatus() == StatsGame.INGAME)
-                Manager.joinInGame(player);
+            if (StateGame.getStatus() == StateGame.INGAME)
+                GameManager.joinInGame(player);
             return;
         }
-        if (!Manager.spectators.contains(player.getUniqueId().toString())) {
-            Manager.spectators.add(player.getUniqueId().toString());
+        if (!GameManager.spectators.contains(player.getUniqueId().toString())) {
+            GameManager.spectators.add(player.getUniqueId().toString());
             player.setGameMode(GameMode.SPECTATOR);
         } else
             player.setGameMode(GameMode.SPECTATOR);
@@ -52,7 +52,7 @@ public class PlayerManager implements Listener {
             board.delete();
         }
 
-        Manager.quit(player);
+        GameManager.quit(player);
     }
 
     @EventHandler
@@ -65,10 +65,10 @@ public class PlayerManager implements Listener {
     @EventHandler
     public void onRespawn(PlayerRespawnEvent event) {
         final Player player = event.getPlayer();
-        if (StatsGame.getStatus() == StatsGame.INGAME) {
-            Manager.respawn.add(player.getUniqueId().toString());
+        if (StateGame.getStatus() == StateGame.INGAME) {
+            GameManager.respawn.add(player.getUniqueId().toString());
             player.getInventory().clear();
-            Manager.playerTeleport(player);
+            GameManager.playerTeleport(player);
 
             new BukkitRunnable() {
                 int i = 5;
@@ -78,7 +78,7 @@ public class PlayerManager implements Listener {
                         player.sendTitle("§6§lPrêt à reprendre ?", "§e" + i + " secondes", 15, 30, 15);
                     }
                     else {
-                        Manager.respawn.remove(player.getUniqueId().toString());
+                        GameManager.respawn.remove(player.getUniqueId().toString());
                         cancel();
                     }
                 }

@@ -9,11 +9,6 @@ import java.lang.reflect.Field;
 import java.util.Optional;
 import java.util.function.Predicate;
 
-/**
- * Small reflection utility class to use CraftBukkit and NMS.
- *
- * @author MrMicky
- */
 public final class FastReflection {
 
     private static final String NM_PACKAGE = "net.minecraft";

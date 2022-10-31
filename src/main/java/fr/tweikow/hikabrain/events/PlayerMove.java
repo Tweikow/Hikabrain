@@ -1,10 +1,8 @@
 package fr.tweikow.hikabrain.events;
 
 import fr.tweikow.hikabrain.Main;
-import fr.tweikow.hikabrain.utils.Manager;
-import fr.tweikow.hikabrain.utils.StatsGame;
-import org.bukkit.DyeColor;
-import org.bukkit.Location;
+import fr.tweikow.hikabrain.managers.GameManager;
+import fr.tweikow.hikabrain.managers.StateGame;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -20,22 +18,22 @@ public class PlayerMove implements Listener {
         Player player = event.getPlayer();
         Block block = player.getLocation().getBlock().getRelative(BlockFace.DOWN);
 
-        if (StatsGame.getStatus() == StatsGame.LAUNCHING)
-            if (Manager.team_red.contains(player.getUniqueId().toString()) || Manager.team_blue.contains(player.getUniqueId().toString()))
+        if (StateGame.getStatus() == StateGame.LAUNCHING)
+            if (GameManager.team_red.contains(player.getUniqueId().toString()) || GameManager.team_blue.contains(player.getUniqueId().toString()))
                 event.setCancelled(true);
 
-        if (StatsGame.getStatus() == StatsGame.FINISH)
+        if (StateGame.getStatus() == StateGame.FINISH)
             if (player.getLocation().getBlockY() <= Main.instance.getConfig().getDouble("hikabrain.dead_zone"))
-                Manager.playerTeleport(player);
-        if (StatsGame.getStatus() == StatsGame.INGAME) {
-            if (Manager.respawn.contains(player.getUniqueId().toString()))
+                GameManager.playerTeleport(player);
+        if (StateGame.getStatus() == StateGame.INGAME) {
+            if (GameManager.respawn.contains(player.getUniqueId().toString()))
                 event.setCancelled(true);
             if (player.getLocation().getBlockY() <= Main.instance.getConfig().getDouble("hikabrain.dead_zone"))
                 player.setHealth(0);
-            if (block.getType() == Material.RED_WOOL && Manager.team_blue.contains(player.getUniqueId().toString()))
-                Manager.addScore("bleu");
-            if (block.getType() == Material.BLUE_WOOL && Manager.team_red.contains(player.getUniqueId().toString()))
-                Manager.addScore("rouge");
+            if (block.getType() == Material.RED_WOOL && GameManager.team_blue.contains(player.getUniqueId().toString()))
+                GameManager.addScore("bleu");
+            if (block.getType() == Material.BLUE_WOOL && GameManager.team_red.contains(player.getUniqueId().toString()))
+                GameManager.addScore("rouge");
         }
     }
 }

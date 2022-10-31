@@ -20,15 +20,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
 
-/**
- * Lightweight packet-based scoreboard API for Bukkit plugins.
- * It can be safely used asynchronously as everything is at packet level.
- * <p>
- * The project is on <a href="https://github.com/MrMicky-FR/FastBoard">GitHub</a>.
- *
- * @author MrMicky
- * @version 1.2.0
- */
 public class FastBoard {
 
     private static final Map<Class<?>, Field[]> PACKETS = new HashMap<>(8);

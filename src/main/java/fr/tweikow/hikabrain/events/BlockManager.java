@@ -1,7 +1,7 @@
 package fr.tweikow.hikabrain.events;
 
-import fr.tweikow.hikabrain.utils.Manager;
-import fr.tweikow.hikabrain.utils.StatsGame;
+import fr.tweikow.hikabrain.managers.GameManager;
+import fr.tweikow.hikabrain.managers.StateGame;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -11,32 +11,32 @@ public class BlockManager implements Listener {
 
     @EventHandler
     public void onPlace(BlockPlaceEvent event) {
-        if (StatsGame.getStatus().equals(StatsGame.FINISH))
+        if (StateGame.getStatus().equals(StateGame.FINISH))
             event.setCancelled(true);
-        if (StatsGame.getStatus().equals(StatsGame.WAITING)) {
-            if (!Manager.waiting_players.contains(event.getPlayer().getUniqueId().toString()))
+        if (StateGame.getStatus().equals(StateGame.WAITING)) {
+            if (!GameManager.waiting_players.contains(event.getPlayer().getUniqueId().toString()))
                 return;
             event.setCancelled(true);
         }
-        if (StatsGame.getStatus().equals(StatsGame.INGAME)) {
-            if (!Manager.blocks.contains(event.getBlockPlaced().getLocation()))
-                Manager.blocks.add(event.getBlockPlaced().getLocation());
+        if (StateGame.getStatus().equals(StateGame.INGAME)) {
+            if (!GameManager.blocks.contains(event.getBlockPlaced().getLocation()))
+                GameManager.blocks.add(event.getBlockPlaced().getLocation());
         }
     }
 
     @EventHandler
     public void onBreak(BlockBreakEvent event) {
 
-        if (StatsGame.getStatus().equals(StatsGame.FINISH))
+        if (StateGame.getStatus().equals(StateGame.FINISH))
             event.setCancelled(true);
-        if (StatsGame.getStatus().equals(StatsGame.WAITING)) {
-            if (!Manager.waiting_players.contains(event.getPlayer().getUniqueId().toString()))
+        if (StateGame.getStatus().equals(StateGame.WAITING)) {
+            if (!GameManager.waiting_players.contains(event.getPlayer().getUniqueId().toString()))
                 return;
             event.setCancelled(true);
         }
-        if (StatsGame.getStatus().equals(StatsGame.INGAME)) {
-            if (Manager.blocks.contains(event.getBlock().getLocation()))
-                Manager.blocks.remove(event.getBlock().getLocation());
+        if (StateGame.getStatus().equals(StateGame.INGAME)) {
+            if (GameManager.blocks.contains(event.getBlock().getLocation()))
+                GameManager.blocks.remove(event.getBlock().getLocation());
             else
                 event.setCancelled(true);
         }

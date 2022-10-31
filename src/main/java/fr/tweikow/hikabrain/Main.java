@@ -1,19 +1,14 @@
 package fr.tweikow.hikabrain;
 
-import fr.tweikow.hikabrain.board.FastBoard;
 import fr.tweikow.hikabrain.commands.Hikabrain;
 import fr.tweikow.hikabrain.events.BlockManager;
 import fr.tweikow.hikabrain.events.ChatEvent;
-import fr.tweikow.hikabrain.events.PlayerManager;
+import fr.tweikow.hikabrain.events.PlayerEvents;
 import fr.tweikow.hikabrain.events.PlayerMove;
-import fr.tweikow.hikabrain.utils.StatsGame;
+import fr.tweikow.hikabrain.managers.StateGame;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
 
 public class Main extends JavaPlugin {
 
@@ -23,9 +18,9 @@ public class Main extends JavaPlugin {
     public void onEnable() {
         instance = this;
         saveDefaultConfig();
-        StatsGame.setStatus(StatsGame.WAITING);
+        StateGame.setStatus(StateGame.WAITING);
 
-        Bukkit.getPluginManager().registerEvents(new PlayerManager(), this);
+        Bukkit.getPluginManager().registerEvents(new PlayerEvents(), this);
         Bukkit.getPluginManager().registerEvents(new PlayerMove(), this);
         Bukkit.getPluginManager().registerEvents(new ChatEvent(), this);
         Bukkit.getPluginManager().registerEvents(new BlockManager(), this);

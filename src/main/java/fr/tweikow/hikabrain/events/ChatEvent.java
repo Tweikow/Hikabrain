@@ -1,7 +1,7 @@
 package fr.tweikow.hikabrain.events;
 
-import fr.tweikow.hikabrain.utils.Manager;
-import fr.tweikow.hikabrain.utils.StatsGame;
+import fr.tweikow.hikabrain.managers.GameManager;
+import fr.tweikow.hikabrain.managers.StateGame;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -12,8 +12,8 @@ public class ChatEvent implements Listener {
     @EventHandler
     public void onChat(AsyncPlayerChatEvent event) {
         Player player = event.getPlayer();
-        String team = Manager.getTeam(player);
-        if (StatsGame.getStatus() == StatsGame.INGAME) {
+        String team = GameManager.getTeam(player);
+        if (StateGame.getStatus() == StateGame.INGAME) {
             if (team.equalsIgnoreCase("bleu"))
                 event.setFormat("§9" + player.getName() + " §8≫ §f" + event.getMessage());
             if (team.equalsIgnoreCase("rouge"))
