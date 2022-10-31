@@ -11,7 +11,14 @@ public class BlockManager implements Listener {
 
     @EventHandler
     public void onPlace(BlockPlaceEvent event) {
-        if (StatsGame.getStatus() == StatsGame.INGAME) {
+        if (StatsGame.getStatus().equals(StatsGame.FINISH))
+            event.setCancelled(true);
+        if (StatsGame.getStatus().equals(StatsGame.WAITING)) {
+            if (!Manager.waiting_players.contains(event.getPlayer().getUniqueId().toString()))
+                return;
+            event.setCancelled(true);
+        }
+        if (StatsGame.getStatus().equals(StatsGame.INGAME)) {
             if (!Manager.blocks.contains(event.getBlockPlaced().getLocation()))
                 Manager.blocks.add(event.getBlockPlaced().getLocation());
         }
@@ -19,7 +26,15 @@ public class BlockManager implements Listener {
 
     @EventHandler
     public void onBreak(BlockBreakEvent event) {
-        if (StatsGame.getStatus() == StatsGame.INGAME) {
+
+        if (StatsGame.getStatus().equals(StatsGame.FINISH))
+            event.setCancelled(true);
+        if (StatsGame.getStatus().equals(StatsGame.WAITING)) {
+            if (!Manager.waiting_players.contains(event.getPlayer().getUniqueId().toString()))
+                return;
+            event.setCancelled(true);
+        }
+        if (StatsGame.getStatus().equals(StatsGame.INGAME)) {
             if (Manager.blocks.contains(event.getBlock().getLocation()))
                 Manager.blocks.remove(event.getBlock().getLocation());
             else

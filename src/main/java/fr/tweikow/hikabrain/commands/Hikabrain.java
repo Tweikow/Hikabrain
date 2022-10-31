@@ -11,7 +11,6 @@ public class Hikabrain implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player)) return false;
         Player player = (Player) sender;
-
         if (!player.hasPermission(Main.instance.getConfig().getString("hikabrain.permission"))) {
             player.sendMessage(Main.instance.getConfig().getString("messages.no-permission").replace('&', '§'));
             return false;
@@ -28,7 +27,7 @@ public class Hikabrain implements CommandExecutor {
             if (args[0].equalsIgnoreCase("leave"))
                 Manager.quit(player);
             if (args[0].equalsIgnoreCase("start"))
-                Manager.startGame();
+                Manager.setTeamToWaiting();
             if (args[0].equalsIgnoreCase("restart"))
                 Manager.restartGame();
         }
@@ -40,8 +39,6 @@ public class Hikabrain implements CommandExecutor {
                         Manager.setWaitingMax(Integer.valueOf(args[2]));
                         player.sendMessage(Main.instance.getConfig().getString("messages.setMaxWaitingPlayers").replace('&', '§'));
                         player.sendMessage("§eVous venez de définir le nombre maximum de joueurs");
-                    } else {
-
                     }
                 }
                 if (args[1].equalsIgnoreCase("team")) {
@@ -53,9 +50,6 @@ public class Hikabrain implements CommandExecutor {
                         Manager.setSpawnTeam(player, "rouge");
                         player.sendMessage("§eVous venez de définir le point d'apparition des §cRouges");
                     }
-                }
-                if (args[1].equalsIgnoreCase("team")) {
-
                 }
             }
         }

@@ -2,7 +2,7 @@ package fr.tweikow.hikabrain.utils;
 
 public enum StatsGame {
 
-    WAITING,STARTING,INGAME,FINISH;
+    WAITING,STARTING,LAUNCHING,INGAME,FINISH;
 
     private static StatsGame status;
 

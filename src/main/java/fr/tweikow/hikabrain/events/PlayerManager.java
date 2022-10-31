@@ -1,11 +1,11 @@
 package fr.tweikow.hikabrain.events;
 
 import fr.tweikow.hikabrain.Main;
-import fr.tweikow.hikabrain.utils.InvManager;
+import fr.tweikow.hikabrain.board.FastBoard;
+import fr.tweikow.hikabrain.board.Scoreboard;
 import fr.tweikow.hikabrain.utils.Manager;
 import fr.tweikow.hikabrain.utils.StatsGame;
 import org.bukkit.GameMode;
-import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -22,14 +22,15 @@ public class PlayerManager implements Listener {
     public void onJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
 
+        Scoreboard.send(player);
+
         event.setJoinMessage("");
         if (!Manager.waiting_players.contains(player.getUniqueId().toString())) {
             if (StatsGame.getStatus() == StatsGame.WAITING) {
                 player.setHealth(player.getMaxHealth());
                 player.setFoodLevel(20);
-            }
-            if (StatsGame.getStatus() == StatsGame.WAITING)
                 Manager.joinWaiting(player);
+            }
             if (StatsGame.getStatus() == StatsGame.INGAME)
                 Manager.joinInGame(player);
             return;
@@ -44,8 +45,12 @@ public class PlayerManager implements Listener {
     @EventHandler
     public void onQuit(PlayerQuitEvent event) {
         Player player = event.getPlayer();
-
         event.setQuitMessage("");
+
+        FastBoard board = Scoreboard.boards.remove(player.getUniqueId());
+        if (board != null) {
+            board.delete();
+        }
 
         Manager.quit(player);
     }
@@ -61,25 +66,23 @@ public class PlayerManager implements Listener {
     public void onRespawn(PlayerRespawnEvent event) {
         final Player player = event.getPlayer();
         if (StatsGame.getStatus() == StatsGame.INGAME) {
+            Manager.respawn.add(player.getUniqueId().toString());
             player.getInventory().clear();
-            if (Manager.team_red.contains(player.getUniqueId().toString())) {
-                InvManager.sendStuff(player, "rouge");
-                new BukkitRunnable() {
-                    public void run() {
-                        player.teleport((Location) Main.instance.getConfig().get("hikabrain.team.rouge.spawn"));
+            Manager.playerTeleport(player);
+
+            new BukkitRunnable() {
+                int i = 5;
+                public void run() {
+                    if (i != 0) {
+                        i--;
+                        player.sendTitle("§6§lPrêt à reprendre ?", "§e" + i + " secondes", 15, 30, 15);
+                    }
+                    else {
+                        Manager.respawn.remove(player.getUniqueId().toString());
                         cancel();
                     }
-                }.runTaskTimer(Main.instance, 0, 1);
-            }
-            if (Manager.team_blue.contains(player.getUniqueId().toString())) {
-                InvManager.sendStuff(player, "bleu");
-                new BukkitRunnable() {
-                    public void run() {
-                        player.teleport((Location) Main.instance.getConfig().get("hikabrain.team.bleu.spawn"));
-                        cancel();
-                    }
-                }.runTaskTimer(Main.instance, 0, 1);
-            }
+                }
+            }.runTaskTimer(Main.instance, 0 , 10);
         }
     }
 
