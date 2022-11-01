@@ -21,7 +21,7 @@ public class Scoreboard {
         new BukkitRunnable() {
             @Override
             public void run() {
-                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy/MM/dd");
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
                 String date = simpleDateFormat.format(new Date());
 
                 board.updateTitle("§6§lHikabrain");
