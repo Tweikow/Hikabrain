@@ -74,15 +74,14 @@ public class GameManager {
 
     public static void resetGame() {
         SettingsManager.coordonates.clear();
-        Bukkit.broadcastMessage("spawn : " + Main.instance.getConfig().getLocation("hikabrain.team.rouge.spawn"));
         if (Main.instance.getConfig().getLocation("hikabrain.team.rouge.spawn") != null) {
             SettingsManager.spawn_red = Main.instance.getConfig().getLocation("hikabrain.team.rouge.spawn");
             SettingsManager.spawn_blue = Main.instance.getConfig().getLocation("hikabrain.team.bleu.spawn");
             SettingsManager.spawnProtect(SettingsManager.spawn_red, 8);
             SettingsManager.spawnProtect(SettingsManager.spawn_blue, 8);
-        } else {
+        } else
             Bukkit.broadcastMessage(ChatColor.RED + "Merci de bien vouloir mettre en place les points de spawn des équipes. Merci de bien vouloir redémarré le serveur après avoir mis les points de spawn des équipes");
-        }
+
 
         waiting = 0;
         score_red = 0;
