@@ -1,11 +1,14 @@
 package fr.tweikow.hikabrain.managers;
 
 import fr.tweikow.hikabrain.Main;
+import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.*;
+import java.util.List;
 
 public class GameManager {
 
@@ -15,6 +18,7 @@ public class GameManager {
     public static Integer score_red = 0;
 
     public static HashMap<String, String> players = new HashMap<>();
+    public static List<Location> blocks = new ArrayList<>();
 
     public static List<String> waiting_players = new ArrayList<>();
     public static List<String> team_blue = new ArrayList<>();
@@ -22,24 +26,26 @@ public class GameManager {
     public static List<String> spectators = new ArrayList<>();
     public static List<String> respawn = new ArrayList<>();
 
-    public static List<Location> blocks = new ArrayList<>();
-
     public static void addScore(String team) {
         SettingsManager.teamTeleport();
         if (team.equalsIgnoreCase("bleu")) {
             GameManager.score_blue++;
-            Bukkit.broadcastMessage("§eL'équipe §9Bleu §eà marqué ! \n §eScore: §9" + GameManager.score_blue + "§7 : §c" + GameManager.score_red);
+            Bukkit.broadcastMessage("§eL'équipe §9Bleu §eà marqué !");
         }
         if (team.equalsIgnoreCase("rouge")) {
             GameManager.score_red++;
-            Bukkit.broadcastMessage("§eL'équipe §cRouge §eà marqué ! \n §eScore: §9" + GameManager.score_blue + "§7 : §c" + GameManager.score_red);
+            Bukkit.broadcastMessage("§eL'équipe §cRouge §eà marqué !");
         }
         if (score_blue == Main.instance.getConfig().getInt("hikabrain.points") || score_red == Main.instance.getConfig().getInt("hikabrain.points")) {
-            finishGame(false, null);
+            if (score_blue == Main.instance.getConfig().getInt("hikabrain.points")) {
+                finishGame("bleu");
+            }
+            if (score_red == Main.instance.getConfig().getInt("hikabrain.points")) {
+                finishGame("rouge");
+            }
             return;
         }
         StateGame.setStatus(StateGame.LAUNCHING);
-        SettingsManager.cooldown();
     }
 
     public static void start() {
@@ -66,7 +72,13 @@ public class GameManager {
         }.runTaskTimer(Main.instance, 0, 20);
     }
 
-    public static void restartGame() {
+    public static void resetGame() {
+        SettingsManager.coordonates.clear();
+        SettingsManager.spawn_red = Main.instance.getConfig().getLocation("hikabrain.team.rouge.spawn");
+        SettingsManager.spawn_blue = Main.instance.getConfig().getLocation("hikabrain.team.bleu.spawn");
+        SettingsManager.spawnProtect(SettingsManager.spawn_red, 8);
+        SettingsManager.spawnProtect(SettingsManager.spawn_blue, 8);
+
         waiting = 0;
         score_red = 0;
         score_blue = 0;
@@ -79,36 +91,26 @@ public class GameManager {
 
         StateGame.setStatus(StateGame.WAITING);
         new SettingsManager().removeBlocks();
-
-        for (Player player : Bukkit.getOnlinePlayers())
-            new PlayerManager().joinWaiting(player);
     }
 
-    public static void finishGame(boolean abandon, String team_win) {
+    public static void restartGame() {
+        resetGame();
+        for (Player player : Bukkit.getOnlinePlayers())
+            PlayerManager.joinWaiting(player);
+    }
+
+    public static void finishGame(String team_win) {
         StateGame.setStatus(StateGame.FINISH);
         for (Player player : Bukkit.getOnlinePlayers()) {
             player.setGameMode(GameMode.SURVIVAL);
             player.getInventory().clear();
             player.setAllowFlight(true);
-            if (abandon) {
-                if (team_win.equalsIgnoreCase("rouge"))
-                    player.sendTitle("§eLa partie est désormais terminé !", "§6Les vainqueurs sont : §7[§cRouge§7]", 15,20*14,15);
-                if (team_win.equalsIgnoreCase("bleu"))
-                    player.sendTitle("§eLa partie est désormais terminé !", "§6Les vainqueurs sont : §7[§9Bleu§7]", 15, 20*14, 15);
-                new BukkitRunnable() {
-                    public void run() {
-                        restartGame();
-                        cancel();
-                    }
-                }.runTaskTimer(Main.instance, 20*15, 0);
-                return;
-            }
-            if (score_blue > score_red)
-                player.sendTitle("§eLa partie est désormais terminé !", "§6Les vainqueurs sont : §7[§9Bleu§7]", 15, 20*14, 15);
-            if (score_blue.equals(score_red))
-                player.sendTitle("§eLa partie est désormais terminé !", "§6Résultat final : §7[§6Egalité§7]", 15, 20*14, 15);
-            else
-                player.sendTitle("§eLa partie est désormais terminé !", "§6Les vainqueurs sont : §7[§cRouge§7]", 15,20*14,15);
+            if (team_win.equalsIgnoreCase("rouge"))
+                player.sendTitle("§eLa partie est désormais terminé !", "§eLes §3Bleus §eremportent la partie !", 15, 20 * 14, 15);
+            if (team_win.equalsIgnoreCase("bleu"))
+                player.sendTitle("§eLa partie est désormais terminé !", "§eLes §cRouges §eremportent la partie !", 15, 20 * 14, 15);
+            if (team_win.equalsIgnoreCase("egalite"))
+                player.sendTitle("§eLa partie est désormais terminé !", "§6Egalité", 15, 20 * 14, 15);
         }
         new BukkitRunnable() {
             public void run() {

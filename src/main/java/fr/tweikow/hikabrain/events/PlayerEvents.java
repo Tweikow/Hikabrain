@@ -1,14 +1,16 @@
 package fr.tweikow.hikabrain.events;
 
 import fr.tweikow.hikabrain.Main;
-import fr.tweikow.hikabrain.board.FastBoard;
 import fr.tweikow.hikabrain.board.Scoreboard;
 import fr.tweikow.hikabrain.managers.GameManager;
+import fr.tweikow.hikabrain.managers.PlayerManager;
+import fr.tweikow.hikabrain.managers.SettingsManager;
 import fr.tweikow.hikabrain.managers.StateGame;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -29,10 +31,10 @@ public class PlayerEvents implements Listener {
             if (StateGame.getStatus() == StateGame.WAITING) {
                 player.setHealth(player.getMaxHealth());
                 player.setFoodLevel(20);
-                GameManager.joinWaiting(player);
+                PlayerManager.joinWaiting(player);
             }
             if (StateGame.getStatus() == StateGame.INGAME)
-                GameManager.joinInGame(player);
+                PlayerManager.joinInGame(player);
             return;
         }
         if (!GameManager.spectators.contains(player.getUniqueId().toString())) {
@@ -47,47 +49,30 @@ public class PlayerEvents implements Listener {
         Player player = event.getPlayer();
         event.setQuitMessage("");
 
-        FastBoard board = Scoreboard.boards.remove(player.getUniqueId());
-        if (board != null) {
-            board.delete();
-        }
-
-        GameManager.quit(player);
+        new PlayerManager().quit(player);
     }
 
     @EventHandler
     public void onDeath(PlayerDeathEvent event) {
+        Player player = event.getEntity();
         event.setDeathMessage(null);
         event.setKeepInventory(true);
-        event.getEntity().getPlayer().spigot().respawn();
+        player.spigot().respawn();
     }
 
     @EventHandler
     public void onRespawn(PlayerRespawnEvent event) {
-        final Player player = event.getPlayer();
-        if (StateGame.getStatus() == StateGame.INGAME) {
-            GameManager.respawn.add(player.getUniqueId().toString());
-            player.getInventory().clear();
-            GameManager.playerTeleport(player);
-
-            new BukkitRunnable() {
-                int i = 5;
-                public void run() {
-                    if (i != 0) {
-                        i--;
-                        player.sendTitle("§6§lPrêt à reprendre ?", "§e" + i + " secondes", 15, 30, 15);
-                    }
-                    else {
-                        GameManager.respawn.remove(player.getUniqueId().toString());
-                        cancel();
-                    }
-                }
-            }.runTaskTimer(Main.instance, 0 , 10);
-        }
+        new PlayerManager().respawn(event.getPlayer());
     }
 
     @EventHandler
     public void foodLevelChange(FoodLevelChangeEvent event){
         event.setCancelled(true);
+    }
+
+    @EventHandler
+    public void damagePlayer(EntityDamageByEntityEvent event) {
+        if (StateGame.getStatus().equals(StateGame.WAITING) || StateGame.getStatus().equals(StateGame.STARTING))
+            event.setCancelled(true);
     }
 }

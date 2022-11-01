@@ -2,28 +2,32 @@ package fr.tweikow.hikabrain.managers;
 
 import fr.tweikow.hikabrain.Main;
 import fr.tweikow.hikabrain.utils.InvManager;
-import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
-import org.bukkit.Location;
-import org.bukkit.Material;
+import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
 public class SettingsManager {
 
+    public static Location spawn_red;
+    public static Location spawn_blue;
+    public static List<Location> coordonates = new ArrayList<>();
+
     public static void teamTeleport() {
         for (Player player : Bukkit.getOnlinePlayers()) {
             player.getInventory().clear();
+            player.setHealth(20);
             if (GameManager.team_red.contains(player.getUniqueId().toString())) {
                 InvManager.sendStuff(player, "rouge");
-                player.teleport((Location) Main.instance.getConfig().get("hikabrain.team.rouge.spawn"));
+                player.teleport(spawn_red);
             }
             if (GameManager.team_blue.contains(player.getUniqueId().toString())) {
                 InvManager.sendStuff(player, "bleu");
-                player.teleport((Location) Main.instance.getConfig().get("hikabrain.team.bleu.spawn"));
+                player.teleport(spawn_blue);
             }
         }
     }
@@ -60,6 +64,12 @@ public class SettingsManager {
         Main.instance.saveConfig();
     }
 
+    public void setWaitingRoom(Player player) {
+        Location loc = player.getLocation();
+        Main.instance.getConfig().set("hikabrain.waiting_room", loc);
+        Main.instance.saveConfig();
+    }
+
     public static Integer getWaiting() {
         return GameManager.waiting;
     }
@@ -91,7 +101,6 @@ public class SettingsManager {
         }
         teamTeleport();
         StateGame.setStatus(StateGame.LAUNCHING);
-        cooldown();
     }
 
     public void removeBlocks() {
@@ -113,10 +122,41 @@ public class SettingsManager {
                 else {
                     for (Player p : Bukkit.getOnlinePlayers())
                         p.sendTitle("§eLa partie commence !", "§c§lBonne chance !", 15, 30, 15);
+                    setGamerule(2);
                     StateGame.setStatus(StateGame.INGAME);
                     cancel();
                 }
             }
         }.runTaskTimer(Main.instance, 0, 20);
+    }
+
+    public static void spawnProtect(Location loc, int boucle) {
+        Location location = new Location(Bukkit.getWorld(loc.getWorld().getName()), loc.getBlockX(),loc.getBlockY() - 4,loc.getBlockZ());
+        for (int i = 0; i < boucle; i++) {
+            coordonates.add(new Location(Bukkit.getWorld(location.getWorld().getName()), location.getBlockX(),location.getBlockY() + i,location.getBlockZ()));
+            coordonates.add(new Location(Bukkit.getWorld(location.getWorld().getName()), location.getBlockX(),location.getBlockY() + i,location.getBlockZ() + 1));
+            coordonates.add(new Location(Bukkit.getWorld(location.getWorld().getName()), location.getBlockX(),location.getBlockY() + i,location.getBlockZ() - 1));
+            coordonates.add(new Location(Bukkit.getWorld(location.getWorld().getName()), location.getBlockX() - 1,location.getBlockY() + i,location.getBlockZ()));
+            coordonates.add(new Location(Bukkit.getWorld(location.getWorld().getName()), location.getBlockX() + 1,location.getBlockY() + i,location.getBlockZ()));
+            coordonates.add(new Location(Bukkit.getWorld(location.getWorld().getName()), location.getBlockX() + 1,location.getBlockY() + i,location.getBlockZ() - 1 ));
+            coordonates.add(new Location(Bukkit.getWorld(location.getWorld().getName()), location.getBlockX() + 1,location.getBlockY() + i,location.getBlockZ() + 1 ));
+            coordonates.add(new Location(Bukkit.getWorld(location.getWorld().getName()), location.getBlockX() - 1,location.getBlockY() + i,location.getBlockZ() + 1 ));
+            coordonates.add(new Location(Bukkit.getWorld(location.getWorld().getName()), location.getBlockX() - 1,location.getBlockY() + i,location.getBlockZ() - 1 ));
+        }
+    }
+
+    public static void setGamerule(final int seconds) {
+        new BukkitRunnable() {
+            int cooldown = 0;
+            @Override
+            public void run() {
+                Bukkit.getWorld(Main.instance.getConfig().getString("hikabrain.world")).setGameRule(GameRule.FALL_DAMAGE, false);
+                if (cooldown < seconds) cooldown++;
+                else {
+                    Bukkit.getWorld(Main.instance.getConfig().getString("hikabrain.world")).setGameRule(GameRule.FALL_DAMAGE, true);
+                    cancel();
+                }
+            }
+        }.runTaskTimer(Main.instance, 0, seconds * 20L);
     }
 }

@@ -9,5 +9,11 @@ public enum StateGame {
     public static StateGame getStatus() {return status;}
 
     public static void setStatus(StateGame status) {
-        StateGame.status = status;}
+        StateGame.status = status;
+
+        if (status == StateGame.LAUNCHING) {
+            SettingsManager.cooldown();
+            new SettingsManager().removeBlocks();
+        }
+    }
 }

@@ -1,7 +1,10 @@
 package fr.tweikow.hikabrain.events;
 
+import fr.tweikow.hikabrain.Main;
 import fr.tweikow.hikabrain.managers.GameManager;
+import fr.tweikow.hikabrain.managers.SettingsManager;
 import fr.tweikow.hikabrain.managers.StateGame;
+import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -11,6 +14,8 @@ public class BlockManager implements Listener {
 
     @EventHandler
     public void onPlace(BlockPlaceEvent event) {
+        if (event.getBlockAgainst().getType().equals(Material.BARRIER))
+            event.setCancelled(true);
         if (StateGame.getStatus().equals(StateGame.FINISH))
             event.setCancelled(true);
         if (StateGame.getStatus().equals(StateGame.WAITING)) {
@@ -19,14 +24,19 @@ public class BlockManager implements Listener {
             event.setCancelled(true);
         }
         if (StateGame.getStatus().equals(StateGame.INGAME)) {
-            if (!GameManager.blocks.contains(event.getBlockPlaced().getLocation()))
-                GameManager.blocks.add(event.getBlockPlaced().getLocation());
+            if (SettingsManager.coordonates.contains(event.getBlockPlaced().getLocation()))
+                event.setCancelled(true);
+            if (event.getBlock().getType().equals(Material.SANDSTONE)) {
+                if (GameManager.blocks.contains(event.getBlock().getLocation()))
+                    GameManager.blocks.remove(event.getBlock().getLocation());
+                else
+                    GameManager.blocks.add(event.getBlock().getLocation());
+            }
         }
     }
 
     @EventHandler
     public void onBreak(BlockBreakEvent event) {
-
         if (StateGame.getStatus().equals(StateGame.FINISH))
             event.setCancelled(true);
         if (StateGame.getStatus().equals(StateGame.WAITING)) {
@@ -35,10 +45,14 @@ public class BlockManager implements Listener {
             event.setCancelled(true);
         }
         if (StateGame.getStatus().equals(StateGame.INGAME)) {
-            if (GameManager.blocks.contains(event.getBlock().getLocation()))
-                GameManager.blocks.remove(event.getBlock().getLocation());
-            else
+            if (SettingsManager.coordonates.contains(event.getBlock().getLocation()))
                 event.setCancelled(true);
+            if (event.getBlock().getType().equals(Material.SANDSTONE)) {
+                if (GameManager.blocks.contains(event.getBlock().getLocation()))
+                    GameManager.blocks.remove(event.getBlock().getLocation());
+                else
+                    GameManager.blocks.add(event.getBlock().getLocation());
+            }
         }
     }
 }

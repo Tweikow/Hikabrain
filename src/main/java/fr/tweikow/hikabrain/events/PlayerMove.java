@@ -2,6 +2,7 @@ package fr.tweikow.hikabrain.events;
 
 import fr.tweikow.hikabrain.Main;
 import fr.tweikow.hikabrain.managers.GameManager;
+import fr.tweikow.hikabrain.managers.PlayerManager;
 import fr.tweikow.hikabrain.managers.StateGame;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -24,12 +25,12 @@ public class PlayerMove implements Listener {
 
         if (StateGame.getStatus() == StateGame.FINISH)
             if (player.getLocation().getBlockY() <= Main.instance.getConfig().getDouble("hikabrain.dead_zone"))
-                GameManager.playerTeleport(player);
+                PlayerManager.teleport(player);
         if (StateGame.getStatus() == StateGame.INGAME) {
             if (GameManager.respawn.contains(player.getUniqueId().toString()))
                 event.setCancelled(true);
             if (player.getLocation().getBlockY() <= Main.instance.getConfig().getDouble("hikabrain.dead_zone"))
-                player.setHealth(0);
+                new PlayerManager().respawn(player);
             if (block.getType() == Material.RED_WOOL && GameManager.team_blue.contains(player.getUniqueId().toString()))
                 GameManager.addScore("bleu");
             if (block.getType() == Material.BLUE_WOOL && GameManager.team_red.contains(player.getUniqueId().toString()))

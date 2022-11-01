@@ -24,16 +24,15 @@ public class Scoreboard {
                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy/MM/dd");
                 String date = simpleDateFormat.format(new Date());
 
-                board.updateTitle("§6§lSolar§f§lMC");
+                board.updateTitle("§6§lHikabrain");
                 board.updateLines(ChatColor.GRAY + date,
                         "§1 ",
                         "§cRouge§f: " + GameManager.score_red,
                         "§3Bleu§f: " + GameManager.score_blue,
                         "§2 ",
-                        "§7Objectif: " + Main.instance.getConfig().getInt("hikabrain.points") + " §7points",
+                        "§7§nObjectif§7: §f" + Main.instance.getConfig().getInt("hikabrain.points") + " §7points",
                         "§3 ",
-                        "§7Alliances entre",
-                        "§7équipes interdites"
+                        "§eplay.hikabrain.fr"
                 );
 
             }

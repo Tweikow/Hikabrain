@@ -17,8 +17,11 @@ public class InvManager {
         meta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
         sword.setItemMeta(meta);
 
-        player.getInventory().addItem(sword);
+        player.getInventory().setItem(0, sword);
+        player.getInventory().setItem(1, ItemBuilder.create(Material.IRON_PICKAXE, 1, null));
+        player.getInventory().setItem(2, ItemBuilder.create(Material.GOLDEN_APPLE, 64, null));
         player.getInventory().addItem(ItemBuilder.create(Material.SANDSTONE, 35*64, null));
+        player.getInventory().setItemInOffHand(ItemBuilder.create(Material.SANDSTONE, 64, null));
 
         if (team.equalsIgnoreCase("rouge")) {
             player.getInventory().setHelmet(ItemBuilder.createLeather(Material.LEATHER_HELMET, Color.RED));
