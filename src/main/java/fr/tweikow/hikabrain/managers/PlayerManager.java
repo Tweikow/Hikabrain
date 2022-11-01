@@ -5,6 +5,7 @@ import fr.tweikow.hikabrain.board.FastBoard;
 import fr.tweikow.hikabrain.board.Scoreboard;
 import fr.tweikow.hikabrain.utils.InvManager;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -84,7 +85,10 @@ public class PlayerManager {
                 player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 10f, 5f);
 
                 //TODO : Mettre dans la config la loc de la waiting room
-                player.teleport(Objects.requireNonNull(Main.instance.getConfig().getLocation("hikabrain.waiting_room")));
+                if (Main.instance.getConfig().getLocation("hikabrain.waiting_room") != null)
+                    player.teleport(Main.instance.getConfig().getLocation("hikabrain.waiting_room"));
+                else
+                    player.sendMessage(ChatColor.RED + "La WaitingRoom est pas mise en place !");
 
                 SettingsManager.setWaiting(SettingsManager.getWaiting() + 1);
                 player.sendMessage(player.getName() + " §eà rejoint la file d'attente §7(§6" + SettingsManager.getWaiting() + "§7/§6" + SettingsManager.getWaitingMax() + "§7)");
