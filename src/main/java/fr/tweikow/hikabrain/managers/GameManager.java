@@ -58,7 +58,7 @@ public class GameManager {
                         Bukkit.broadcastMessage("§eLa partie vas commencer dans " + time + " secondes !");
                         time--;
                     } else {
-                        SettingsManager.setTeamToWaiting();
+                        SettingsManager.startingGame();
                         cancel();
                     }
                 } else {
