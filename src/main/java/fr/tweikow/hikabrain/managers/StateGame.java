@@ -1,5 +1,9 @@
 package fr.tweikow.hikabrain.managers;
 
+import org.bukkit.Bukkit;
+
+import java.util.Set;
+
 public enum StateGame {
 
     WAITING,STARTING,LAUNCHING,INGAME,FINISH;
@@ -13,7 +17,7 @@ public enum StateGame {
 
         if (status == StateGame.LAUNCHING) {
             SettingsManager.cooldown();
-            new SettingsManager().removeBlocks();
+            SettingsManager.removeBlocks();
         }
     }
 }

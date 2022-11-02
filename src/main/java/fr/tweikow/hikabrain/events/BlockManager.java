@@ -29,7 +29,6 @@ public class BlockManager implements Listener {
                 event.setCancelled(true);
             if (!GameManager.breaks.contains(event.getBlock().getLocation()))
                 GameManager.places.add(event.getBlock().getLocation());
-
         }
     }
 

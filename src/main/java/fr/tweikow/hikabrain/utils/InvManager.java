@@ -11,6 +11,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 public class InvManager {
 
     public static void sendStuff(Player player, String team){
+        player.getInventory().clear();
         if (StateGame.getStatus().equals(StateGame.FINISH))
             return;
         ItemStack sword = ItemBuilder.create(Material.IRON_SWORD, 1, null);

@@ -5,7 +5,10 @@ import fr.tweikow.hikabrain.utils.InvManager;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
@@ -105,32 +108,28 @@ public class SettingsManager {
         StateGame.setStatus(StateGame.LAUNCHING);
     }
 
-    public void removeBlocks() {
-        if (GameManager.places.isEmpty())
+    public static void removeBlocks() {
+        if (GameManager.breaks.isEmpty() && GameManager.places.isEmpty())
             return;
-        if (GameManager.breaks.isEmpty())
-            return;
+        clearDroppedItems();
         for (Location loc : GameManager.breaks)
             loc.getBlock().setType(Material.SANDSTONE);
         for (Location loc : GameManager.places)
             loc.getBlock().setType(Material.AIR);
-        GameManager.breaks.clear();
-        GameManager.places.clear();
     }
 
     public static void cooldown() {
         new BukkitRunnable() {
             int i = 5;
             public void run() {
-                if (i != 0) {
+                if (i > 0) {
                     for (Player p : Bukkit.getOnlinePlayers())
                         p.sendTitle("§6§lÊtes-vous prêt ?", "§eDébut dans " + i + " secondes", 15, 30, 15);
                     i--;
-                }
-                else {
+                } else {
                     for (Player p : Bukkit.getOnlinePlayers())
                         p.sendTitle("§eLa partie commence !", "§c§lBonne chance !", 15, 30, 15);
-                    setGamerule(2);
+                    setGamerule(3);
                     StateGame.setStatus(StateGame.INGAME);
                     cancel();
                 }
@@ -175,5 +174,11 @@ public class SettingsManager {
         if (instance == null) throw new RuntimeException("PVPCooldown failed to get player attributes.");
         instance.setBaseValue(val);
         player.saveData();
+    }
+
+    public static void clearDroppedItems() {
+        for(Entity current : Bukkit.getWorld(Main.instance.getConfig().getString("hikabrain.world")).getEntities())
+            if (current instanceof Item)
+                current.remove();
     }
 }

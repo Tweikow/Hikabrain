@@ -29,19 +29,17 @@ public class GameManager {
         SettingsManager.teamTeleport();
         if (team.equalsIgnoreCase("blue")) {
             GameManager.score_blue++;
-            Bukkit.broadcastMessage("§eL'équipe §9Bleu §eà marqué !");
+            Bukkit.broadcastMessage("§eL'équipe §3Bleu §eà marqué !");
         }
         if (team.equalsIgnoreCase("red")) {
             GameManager.score_red++;
             Bukkit.broadcastMessage("§eL'équipe §cRouge §eà marqué !");
         }
         if (score_blue == Main.instance.getConfig().getInt("hikabrain.points") || score_red == Main.instance.getConfig().getInt("hikabrain.points")) {
-            if (score_blue == Main.instance.getConfig().getInt("hikabrain.points")) {
+            if (score_blue == Main.instance.getConfig().getInt("hikabrain.points"))
                 finishGame("blue");
-            }
-            if (score_red == Main.instance.getConfig().getInt("hikabrain.points")) {
+            if (score_red == Main.instance.getConfig().getInt("hikabrain.points"))
                 finishGame("red");
-            }
             return;
         }
         StateGame.setStatus(StateGame.LAUNCHING);
@@ -73,14 +71,10 @@ public class GameManager {
 
     public static void resetGame() {
         SettingsManager.coordonates.clear();
-        if (Main.instance.getConfig().getLocation("hikabrain.team.red.spawn") != null) {
-            SettingsManager.spawn_red = Main.instance.getConfig().getLocation("hikabrain.team.red.spawn");
-            SettingsManager.spawn_blue = Main.instance.getConfig().getLocation("hikabrain.team.blue.spawn");
-            SettingsManager.spawnProtect(SettingsManager.spawn_red, 8);
-            SettingsManager.spawnProtect(SettingsManager.spawn_blue, 8);
-        } else
-            Bukkit.broadcastMessage(ChatColor.RED + "Merci de bien vouloir mettre en place les points de spawn des équipes. Merci de bien vouloir redémarré le serveur après avoir mis les points de spawn des équipes");
 
+        SettingsManager.removeBlocks();
+        GameManager.breaks.clear();
+        GameManager.places.clear();
 
         waiting = 0;
         score_red = 0;
@@ -93,7 +87,6 @@ public class GameManager {
         team_blue.clear();
 
         StateGame.setStatus(StateGame.WAITING);
-        new SettingsManager().removeBlocks();
     }
 
     public static void restartGame() {
@@ -116,10 +109,17 @@ public class GameManager {
                 player.sendTitle("§eLa partie est désormais terminé !", "§6Egalité", 15, 20 * 14, 15);
         }
         new BukkitRunnable() {
+            int i = 15;
             public void run() {
-                restartGame();
-                cancel();
+                if (StateGame.getStatus().equals(StateGame.FINISH)) {
+                    if (i > 0) i--;
+                    else {
+                        restartGame();
+                        cancel();
+                    }
+                } else
+                    cancel();
             }
-        }.runTaskLater(Main.instance,20*15);
+        }.runTaskTimer(Main.instance, 0, 20);
     }
 }

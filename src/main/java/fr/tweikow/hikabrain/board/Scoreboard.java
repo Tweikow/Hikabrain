@@ -26,7 +26,7 @@ public class Scoreboard {
         BukkitTask task = new BukkitRunnable() {
             @Override
             public void run() {
-                if (StateGame.getStatus().equals(StateGame.WAITING)) {
+                if (StateGame.getStatus().equals(StateGame.WAITING) || StateGame.getStatus().equals(StateGame.STARTING)) {
                     if (!boardsWaiting.containsKey(player)) {
                         board.delete();
                         cancel();

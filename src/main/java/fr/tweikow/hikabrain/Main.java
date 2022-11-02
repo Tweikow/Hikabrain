@@ -9,6 +9,7 @@ import fr.tweikow.hikabrain.managers.GameManager;
 import fr.tweikow.hikabrain.managers.SettingsManager;
 import fr.tweikow.hikabrain.managers.StateGame;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.GameRule;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
@@ -23,8 +24,17 @@ public class Main extends JavaPlugin {
         instance = this;
         saveDefaultConfig();
 
+        if (Main.instance.getConfig().getLocation("hikabrain.team.red.spawn") != null) {
+            SettingsManager.spawn_red = Main.instance.getConfig().getLocation("hikabrain.team.red.spawn");
+            SettingsManager.spawn_blue = Main.instance.getConfig().getLocation("hikabrain.team.blue.spawn");
+            SettingsManager.spawnProtect(SettingsManager.spawn_red, 8);
+            SettingsManager.spawnProtect(SettingsManager.spawn_blue, 8);
+        } else
+            Bukkit.broadcastMessage(ChatColor.RED + "Merci de bien vouloir mettre en place les points de spawn des équipes. Merci de bien vouloir redémarré le serveur après avoir mis les points de spawn des équipes");
+
         GameManager.resetGame();
         Bukkit.getWorld(Main.instance.getConfig().getString("hikabrain.world")).setGameRule(GameRule.DO_IMMEDIATE_RESPAWN, true);
+        Bukkit.getWorld(Main.instance.getConfig().getString("hikabrain.world")).setGameRule(GameRule.KEEP_INVENTORY, true);
 
         Bukkit.getPluginManager().registerEvents(new PlayerEvents(), this);
         Bukkit.getPluginManager().registerEvents(new PlayerMove(), this);
