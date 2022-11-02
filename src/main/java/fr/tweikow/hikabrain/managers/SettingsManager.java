@@ -3,6 +3,8 @@ package fr.tweikow.hikabrain.managers;
 import fr.tweikow.hikabrain.Main;
 import fr.tweikow.hikabrain.utils.InvManager;
 import org.bukkit.*;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -158,5 +160,14 @@ public class SettingsManager {
                 }
             }
         }.runTaskTimer(Main.instance, 0, seconds * 20L);
+    }
+
+    public static void pvpCooldown(Player player) {
+        double val = 16.0;
+
+        AttributeInstance instance = player.getAttribute(Attribute.GENERIC_ATTACK_SPEED);
+        if (instance == null) throw new RuntimeException("PVPCooldown failed to get player attributes.");
+        instance.setBaseValue(val);
+        player.saveData();
     }
 }

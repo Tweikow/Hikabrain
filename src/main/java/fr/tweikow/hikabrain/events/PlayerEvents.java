@@ -2,6 +2,7 @@ package fr.tweikow.hikabrain.events;
 
 import fr.tweikow.hikabrain.managers.GameManager;
 import fr.tweikow.hikabrain.managers.PlayerManager;
+import fr.tweikow.hikabrain.managers.SettingsManager;
 import fr.tweikow.hikabrain.managers.StateGame;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
@@ -19,8 +20,9 @@ public class PlayerEvents implements Listener {
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
-
         event.setJoinMessage("");
+
+        SettingsManager.pvpCooldown(player);
         if (!GameManager.waiting_players.contains(player.getUniqueId().toString())) {
             if (StateGame.getStatus() == StateGame.WAITING) {
                 player.setHealth(player.getMaxHealth());
