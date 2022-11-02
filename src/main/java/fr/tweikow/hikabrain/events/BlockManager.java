@@ -13,8 +13,10 @@ public class BlockManager implements Listener {
 
     @EventHandler
     public void onPlace(BlockPlaceEvent event) {
-        if (event.getBlockAgainst().getType().equals(Material.BARRIER))
+        if (event.getBlockAgainst().getType().equals(Material.BARRIER)) {
             event.setCancelled(true);
+            return;
+        }
         if (StateGame.getStatus().equals(StateGame.FINISH))
             event.setCancelled(true);
         if (StateGame.getStatus().equals(StateGame.WAITING)) {
@@ -25,12 +27,9 @@ public class BlockManager implements Listener {
         if (StateGame.getStatus().equals(StateGame.INGAME)) {
             if (SettingsManager.coordonates.contains(event.getBlockPlaced().getLocation()))
                 event.setCancelled(true);
-            if (event.getBlock().getType().equals(Material.SANDSTONE)) {
-                if (GameManager.blocks.contains(event.getBlock().getLocation()))
-                    GameManager.blocks.remove(event.getBlock().getLocation());
-                else
-                    GameManager.blocks.add(event.getBlock().getLocation());
-            }
+            if (!GameManager.breaks.contains(event.getBlock().getLocation()))
+                GameManager.places.add(event.getBlock().getLocation());
+
         }
     }
 
@@ -46,12 +45,7 @@ public class BlockManager implements Listener {
         if (StateGame.getStatus().equals(StateGame.INGAME)) {
             if (SettingsManager.coordonates.contains(event.getBlock().getLocation()))
                 event.setCancelled(true);
-            if (event.getBlock().getType().equals(Material.SANDSTONE)) {
-                if (GameManager.blocks.contains(event.getBlock().getLocation()))
-                    GameManager.blocks.remove(event.getBlock().getLocation());
-                else
-                    GameManager.blocks.add(event.getBlock().getLocation());
-            }
+            GameManager.breaks.add(event.getBlock().getLocation());
         }
     }
 }
