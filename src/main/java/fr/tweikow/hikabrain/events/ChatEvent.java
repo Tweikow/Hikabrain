@@ -18,7 +18,7 @@ public class ChatEvent implements Listener {
         if (StateGame.getStatus() == StateGame.INGAME) {
             if (team.equalsIgnoreCase("bleu"))
                 event.setFormat("§9" + player.getName() + " §8≫ §f" + event.getMessage());
-            if (team.equalsIgnoreCase("rouge"))
+            if (team.equalsIgnoreCase("red"))
                 event.setFormat("§c" + player.getName() + " §8≫ §f" + event.getMessage());
             if (team.equalsIgnoreCase("spectateur")) {
                 event.setCancelled(true);

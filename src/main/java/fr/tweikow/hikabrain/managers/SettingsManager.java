@@ -22,11 +22,11 @@ public class SettingsManager {
             player.getInventory().clear();
             player.setHealth(20);
             if (GameManager.team_red.contains(player.getUniqueId().toString())) {
-                InvManager.sendStuff(player, "rouge");
+                InvManager.sendStuff(player, "red");
                 player.teleport(spawn_red);
             }
             if (GameManager.team_blue.contains(player.getUniqueId().toString())) {
-                InvManager.sendStuff(player, "bleu");
+                InvManager.sendStuff(player, "blue");
                 player.teleport(spawn_blue);
             }
         }
@@ -34,13 +34,13 @@ public class SettingsManager {
 
     public static String getTeam(Player player) {
         if (GameManager.team_blue.contains(player.getUniqueId().toString())) {
-            return "bleu";
+            return "blue";
         }
         if (GameManager.team_red.contains(player.getUniqueId().toString())) {
-            return "rouge";
+            return "red";
         }
         if (GameManager.spectators.contains(player.getUniqueId().toString())) {
-            return "spectateur";
+            return "spectator";
         }
         return null;
     }
@@ -57,10 +57,10 @@ public class SettingsManager {
 
     public void setSpawnTeam(Player player, String team) {
         Location loc = player.getLocation();
-        if (team.equalsIgnoreCase("bleu"))
-            Main.instance.getConfig().set("hikabrain.team.bleu.spawn", loc);
-        if (team.equalsIgnoreCase("rouge"))
-            Main.instance.getConfig().set("hikabrain.team.rouge.spawn", loc);
+        if (team.equalsIgnoreCase("blue"))
+            Main.instance.getConfig().set("hikabrain.team.blue.spawn", loc);
+        if (team.equalsIgnoreCase("red"))
+            Main.instance.getConfig().set("hikabrain.team.red.spawn", loc);
         Main.instance.saveConfig();
     }
 
@@ -87,13 +87,13 @@ public class SettingsManager {
             player.setGameMode(GameMode.SURVIVAL);
             if (PlayerManager.hasNoTeam(player) && GameManager.team_red.size() < (GameManager.waiting_max/2)) {
                 GameManager.team_red.add(value);
-                GameManager.players.put(player.getUniqueId().toString(), "rouge");
+                GameManager.players.put(player.getUniqueId().toString(), "red");
                 player.setPlayerListName("§c" + Bukkit.getPlayer(UUID.fromString(value)).getName());
                 player.sendMessage("§eVous avez rejoint l'équipe §7[§cRouge§7]");
             }
             if (PlayerManager.hasNoTeam(player) && GameManager.team_blue.size() < (GameManager.waiting_max/2)) {
                 GameManager.team_blue.add(value);
-                GameManager.players.put(player.getUniqueId().toString(), "bleu");
+                GameManager.players.put(player.getUniqueId().toString(), "blue");
                 player.setPlayerListName("§9" + Bukkit.getPlayer(UUID.fromString(value)).getName());
                 player.sendMessage("§eVous avez rejoint l'équipe §7[§9Bleu§7]");
             }

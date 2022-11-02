@@ -1,10 +1,7 @@
 package fr.tweikow.hikabrain.events;
 
-import fr.tweikow.hikabrain.Main;
-import fr.tweikow.hikabrain.board.Scoreboard;
 import fr.tweikow.hikabrain.managers.GameManager;
 import fr.tweikow.hikabrain.managers.PlayerManager;
-import fr.tweikow.hikabrain.managers.SettingsManager;
 import fr.tweikow.hikabrain.managers.StateGame;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
@@ -16,15 +13,12 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
-import org.bukkit.scheduler.BukkitRunnable;
 
 public class PlayerEvents implements Listener {
 
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
-
-        Scoreboard.send(player);
 
         event.setJoinMessage("");
         if (!GameManager.waiting_players.contains(player.getUniqueId().toString())) {

@@ -32,9 +32,9 @@ public class PlayerMove implements Listener {
             if (player.getLocation().getBlockY() <= Main.instance.getConfig().getDouble("hikabrain.dead_zone"))
                 new PlayerManager().respawn(player);
             if (block.getType() == Material.RED_WOOL && GameManager.team_blue.contains(player.getUniqueId().toString()))
-                GameManager.addScore("bleu");
+                GameManager.addScore("blue");
             if (block.getType() == Material.BLUE_WOOL && GameManager.team_red.contains(player.getUniqueId().toString()))
-                GameManager.addScore("rouge");
+                GameManager.addScore("red");
         }
     }
 }

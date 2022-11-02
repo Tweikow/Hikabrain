@@ -51,13 +51,12 @@ public class Hikabrain implements CommandExecutor {
                     }
                 }
                 if (args[1].equalsIgnoreCase("team")) {
-                    if (args[2].equalsIgnoreCase("bleu")) {
+                    if (args[2].equalsIgnoreCase("blue") || args[2].equalsIgnoreCase("red")) {
                         new SettingsManager().setSpawnTeam(player, args[2]);
-                        player.sendMessage("§eVous venez de définir le point d'apparition des §9Bleus");
-                    }
-                    if (args[2].equalsIgnoreCase("rouge")) {
-                        new SettingsManager().setSpawnTeam(player, args[2]);
-                        player.sendMessage("§eVous venez de définir le point d'apparition des §cRouges");
+                        if (args[2].equalsIgnoreCase("blue"))
+                            player.sendMessage("§eVous venez de définir le point d'apparition des §9Bleus");
+                        if (args[2].equalsIgnoreCase("red"))
+                            player.sendMessage("§eVous venez de définir le point d'apparition des §cRouges");
                     }
                     return false;
                 }

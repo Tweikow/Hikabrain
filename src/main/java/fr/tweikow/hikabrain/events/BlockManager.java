@@ -1,6 +1,5 @@
 package fr.tweikow.hikabrain.events;
 
-import fr.tweikow.hikabrain.Main;
 import fr.tweikow.hikabrain.managers.GameManager;
 import fr.tweikow.hikabrain.managers.SettingsManager;
 import fr.tweikow.hikabrain.managers.StateGame;

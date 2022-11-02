@@ -1,8 +1,6 @@
 package fr.tweikow.hikabrain.managers;
 
 import fr.tweikow.hikabrain.Main;
-import net.md_5.bungee.api.ChatMessageType;
-import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -28,20 +26,20 @@ public class GameManager {
 
     public static void addScore(String team) {
         SettingsManager.teamTeleport();
-        if (team.equalsIgnoreCase("bleu")) {
+        if (team.equalsIgnoreCase("blue")) {
             GameManager.score_blue++;
             Bukkit.broadcastMessage("§eL'équipe §9Bleu §eà marqué !");
         }
-        if (team.equalsIgnoreCase("rouge")) {
+        if (team.equalsIgnoreCase("red")) {
             GameManager.score_red++;
             Bukkit.broadcastMessage("§eL'équipe §cRouge §eà marqué !");
         }
         if (score_blue == Main.instance.getConfig().getInt("hikabrain.points") || score_red == Main.instance.getConfig().getInt("hikabrain.points")) {
             if (score_blue == Main.instance.getConfig().getInt("hikabrain.points")) {
-                finishGame("bleu");
+                finishGame("blue");
             }
             if (score_red == Main.instance.getConfig().getInt("hikabrain.points")) {
-                finishGame("rouge");
+                finishGame("red");
             }
             return;
         }
@@ -74,9 +72,9 @@ public class GameManager {
 
     public static void resetGame() {
         SettingsManager.coordonates.clear();
-        if (Main.instance.getConfig().getLocation("hikabrain.team.rouge.spawn") != null) {
-            SettingsManager.spawn_red = Main.instance.getConfig().getLocation("hikabrain.team.rouge.spawn");
-            SettingsManager.spawn_blue = Main.instance.getConfig().getLocation("hikabrain.team.bleu.spawn");
+        if (Main.instance.getConfig().getLocation("hikabrain.team.red.spawn") != null) {
+            SettingsManager.spawn_red = Main.instance.getConfig().getLocation("hikabrain.team.red.spawn");
+            SettingsManager.spawn_blue = Main.instance.getConfig().getLocation("hikabrain.team.blue.spawn");
             SettingsManager.spawnProtect(SettingsManager.spawn_red, 8);
             SettingsManager.spawnProtect(SettingsManager.spawn_blue, 8);
         } else
@@ -109,10 +107,10 @@ public class GameManager {
             player.setGameMode(GameMode.SURVIVAL);
             player.getInventory().clear();
             player.setAllowFlight(true);
-            if (team_win.equalsIgnoreCase("rouge"))
-                player.sendTitle("§eLa partie est désormais terminé !", "§eLes §3Bleus §eremportent la partie !", 15, 20 * 14, 15);
-            if (team_win.equalsIgnoreCase("bleu"))
+            if (team_win.equalsIgnoreCase("red"))
                 player.sendTitle("§eLa partie est désormais terminé !", "§eLes §cRouges §eremportent la partie !", 15, 20 * 14, 15);
+            if (team_win.equalsIgnoreCase("blue"))
+                player.sendTitle("§eLa partie est désormais terminé !", "§eLes §3Bleus §eremportent la partie !", 15, 20 * 14, 15);
             if (team_win.equalsIgnoreCase("egalite"))
                 player.sendTitle("§eLa partie est désormais terminé !", "§6Egalité", 15, 20 * 14, 15);
         }

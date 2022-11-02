@@ -11,8 +11,6 @@ import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.Objects;
-
 public class PlayerManager {
 
     public static void removeTeam(Player player) {
@@ -35,11 +33,11 @@ public class PlayerManager {
         new BukkitRunnable() {
             public void run() {
                 if (GameManager.team_red.contains(player.getUniqueId().toString())) {
-                    InvManager.sendStuff(player, "rouge");
+                    InvManager.sendStuff(player, "red");
                     player.teleport(SettingsManager.spawn_red);
                 }
                 if (GameManager.team_blue.contains(player.getUniqueId().toString())) {
-                    InvManager.sendStuff(player, "bleu");
+                    InvManager.sendStuff(player, "blue");
                     player.teleport(SettingsManager.spawn_blue);
                 }
                 cancel();
@@ -54,18 +52,19 @@ public class PlayerManager {
     }
 
     public static void joinInGame(Player player) {
+        Scoreboard.send(player);
         player.setGameMode(GameMode.SURVIVAL);
         String team = GameManager.players.get(player.getUniqueId().toString());
-        if (team.equalsIgnoreCase("rouge")) {
+        if (team.equalsIgnoreCase("red")) {
             GameManager.team_red.add(player.getUniqueId().toString());
-            InvManager.sendStuff(player, "rouge");
+            InvManager.sendStuff(player, "red");
             player.teleport(SettingsManager.spawn_red);
             Bukkit.broadcastMessage("§c" + player.getName() + " §evient de se reconnecter !");
             player.setPlayerListName("§c" + player.getName());
         }
-        if (team.equalsIgnoreCase("bleu")) {
+        if (team.equalsIgnoreCase("blue")) {
             GameManager.team_blue.add(player.getUniqueId().toString());
-            InvManager.sendStuff(player, "bleu");
+            InvManager.sendStuff(player, "blue");
             player.teleport(SettingsManager.spawn_blue);
             Bukkit.broadcastMessage("§9" + player.getName() + " §evient de se reconnecter !");
             player.setPlayerListName("§9" + player.getName());
@@ -75,6 +74,8 @@ public class PlayerManager {
     }
 
     public static void joinWaiting(Player player) {
+
+        Scoreboard.send(player);
         if (StateGame.getStatus() == StateGame.WAITING) {
             if (!GameManager.waiting_players.contains(player.getUniqueId().toString())) {
                 GameManager.waiting_players.add(player.getUniqueId().toString());
@@ -84,7 +85,6 @@ public class PlayerManager {
                 player.setAllowFlight(false);
                 player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 10f, 5f);
 
-                //TODO : Mettre dans la config la loc de la waiting room
                 if (Main.instance.getConfig().getLocation("hikabrain.waiting_room") != null)
                     player.teleport(Main.instance.getConfig().getLocation("hikabrain.waiting_room"));
                 else
@@ -125,11 +125,11 @@ public class PlayerManager {
                             Bukkit.broadcastMessage("§cLa partie est désormais terminé ! Raison: Abandon !");
 
                             if (GameManager.team_blue.size() == 0) {
-                                GameManager.finishGame("rouge");
+                                GameManager.finishGame("red");
                                 cancel();
                                 return;
                             }
-                            GameManager.finishGame("bleu");
+                            GameManager.finishGame("blue");
                             cancel();
                         }
                         i--;
@@ -147,19 +147,6 @@ public class PlayerManager {
             player.setHealth(20);
             PlayerManager.teleport(player);
             SettingsManager.setGamerule(5 + 2);
-            /*new BukkitRunnable() {
-                int i = 5;
-                public void run() {
-                    if (i != 0) {
-                        i--;
-                        player.sendTitle("§6§lPrêt à reprendre ?", "§e" + i + " secondes", 15, 30, 15);
-                        return;
-                    }
-                    player.sendTitle("§eLa partie commence !", "§c§lBonne chance !", 15, 30, 15);
-                    GameManager.respawn.remove(player.getUniqueId().toString());
-                    cancel();
-                }
-            }.runTaskTimer(Main.instance, 0 , 20);*/
         }
     }
 }
