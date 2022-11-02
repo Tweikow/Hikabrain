@@ -52,7 +52,7 @@ public class PlayerManager {
     }
 
     public static void joinInGame(Player player) {
-        Scoreboard.send(player);
+        Scoreboard.sendInGame(player);
         player.setGameMode(GameMode.SURVIVAL);
         String team = GameManager.players.get(player.getUniqueId().toString());
         if (team.equalsIgnoreCase("red")) {
@@ -75,7 +75,7 @@ public class PlayerManager {
 
     public static void joinWaiting(Player player) {
 
-        Scoreboard.send(player);
+        Scoreboard.sendWaiting(player);
         if (StateGame.getStatus() == StateGame.WAITING) {
             if (!GameManager.waiting_players.contains(player.getUniqueId().toString())) {
                 GameManager.waiting_players.add(player.getUniqueId().toString());
@@ -100,9 +100,11 @@ public class PlayerManager {
     }
 
     public void quit(Player player) {
-        FastBoard board = Scoreboard.boards.remove(player.getUniqueId());
-        if (board != null) {
-            board.delete();
+        FastBoard boardWaiting = Scoreboard.boardsWaiting.remove(player.getUniqueId());
+        FastBoard boardIG = Scoreboard.boardsInGame.remove(player.getUniqueId());
+        if (boardWaiting != null || boardIG != null) {
+            boardWaiting.delete();
+            boardIG.delete();
         }
         if (StateGame.getStatus() == StateGame.WAITING || StateGame.getStatus() == StateGame.STARTING) {
             if (GameManager.waiting_players.contains(player.getUniqueId().toString())) {
