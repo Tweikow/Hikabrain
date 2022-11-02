@@ -1,5 +1,6 @@
 package fr.tweikow.hikabrain.utils;
 
+import fr.tweikow.hikabrain.managers.StateGame;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -10,6 +11,8 @@ import org.bukkit.inventory.meta.ItemMeta;
 public class InvManager {
 
     public static void sendStuff(Player player, String team){
+        if (StateGame.getStatus().equals(StateGame.FINISH))
+            return;
         ItemStack sword = ItemBuilder.create(Material.IRON_SWORD, 1, null);
         ItemMeta meta = sword.getItemMeta();
         meta.setUnbreakable(true);
