@@ -106,10 +106,16 @@ public class SettingsManager {
     }
 
     public void removeBlocks() {
-        if (GameManager.blocks.isEmpty())
+        if (GameManager.places.isEmpty())
             return;
-        for (Location loc : GameManager.blocks)
+        if (GameManager.breaks.isEmpty())
+            return;
+        for (Location loc : GameManager.breaks)
+            loc.getBlock().setType(Material.SANDSTONE);
+        for (Location loc : GameManager.places)
             loc.getBlock().setType(Material.AIR);
+        GameManager.breaks.clear();
+        GameManager.places.clear();
     }
 
     public static void cooldown() {
