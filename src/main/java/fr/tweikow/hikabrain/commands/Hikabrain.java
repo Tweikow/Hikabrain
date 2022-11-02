@@ -4,7 +4,6 @@ import fr.tweikow.hikabrain.Main;
 import fr.tweikow.hikabrain.managers.GameManager;
 import fr.tweikow.hikabrain.managers.PlayerManager;
 import fr.tweikow.hikabrain.managers.SettingsManager;
-import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -25,7 +24,7 @@ public class Hikabrain implements CommandExecutor {
             if (args[0].equalsIgnoreCase("leave"))
                 new PlayerManager().quit(player);
             if (args[0].equalsIgnoreCase("start"))
-                SettingsManager.setTeamToWaiting();
+                SettingsManager.startingGame();
             if (args[0].equalsIgnoreCase("restart"))
                 GameManager.restartGame();
             return false;

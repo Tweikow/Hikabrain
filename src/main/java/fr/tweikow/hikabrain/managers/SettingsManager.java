@@ -78,7 +78,7 @@ public class SettingsManager {
         return GameManager.waiting_max;
     }
 
-    public static void setTeamToWaiting() {
+    public static void startingGame() {
         String value;
         Player player;
         while (!GameManager.waiting_players.isEmpty()) {
