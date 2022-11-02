@@ -16,7 +16,8 @@ public class GameManager {
     public static Integer score_red = 0;
 
     public static HashMap<String, String> players = new HashMap<>();
-    public static List<Location> blocks = new ArrayList<>();
+    public static List<Location> breaks = new ArrayList<>();
+    public static List<Location> places = new ArrayList<>();
 
     public static List<String> waiting_players = new ArrayList<>();
     public static List<String> team_blue = new ArrayList<>();
