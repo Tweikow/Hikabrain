@@ -24,8 +24,8 @@ public class BlockManager implements Listener {
                 return;
             event.setCancelled(true);
         }
-        if (StateGame.getStatus().equals(StateGame.INGAME)) {
-            if (SettingsManager.coordonates.contains(event.getBlockPlaced().getLocation()))
+        if (StateGame.getStatus().equals(StateGame.INGAME) || StateGame.getStatus().equals(StateGame.LAUNCHING)) {
+            if (SettingsManager.coordonates.contains(event.getBlock().getLocation()))
                 event.setCancelled(true);
             if (!GameManager.breaks.contains(event.getBlock().getLocation()))
                 GameManager.places.add(event.getBlock().getLocation());

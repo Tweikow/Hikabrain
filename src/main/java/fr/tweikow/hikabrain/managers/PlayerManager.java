@@ -46,8 +46,21 @@ public class PlayerManager {
     }
 
     public static void addSpectator(Player player) {
-        GameManager.spectators.add(player.getUniqueId().toString());
-        player.setGameMode(GameMode.SPECTATOR);
+        if (!GameManager.spectators.contains(player.getUniqueId().toString()))
+            GameManager.spectators.add(player.getUniqueId().toString());
+        player.teleport(SettingsManager.spawn_blue);
+        player.getInventory().clear();
+        player.setGameMode(GameMode.ADVENTURE);
+        player.setAllowFlight(true);
+
+        for (Player p : Bukkit.getOnlinePlayers())
+            p.hidePlayer(Main.instance, player);
+
+        if (StateGame.getStatus().equals(StateGame.INGAME) || StateGame.getStatus().equals(StateGame.LAUNCHING))
+            Scoreboard.sendInGame(player);
+        if (StateGame.getStatus().equals(StateGame.FINISH))
+            Scoreboard.sendEndGame(player);
+
         player.sendMessage("§eVous êtes actuellement Spectateur de la partie.");
     }
 
@@ -55,19 +68,20 @@ public class PlayerManager {
         Scoreboard.sendInGame(player);
         player.setGameMode(GameMode.SURVIVAL);
         String team = GameManager.players.get(player.getUniqueId().toString());
-        if (team.equalsIgnoreCase("red")) {
+        Bukkit.broadcastMessage(team);
+        if (team.equals("red")) {
             GameManager.team_red.add(player.getUniqueId().toString());
             InvManager.sendStuff(player, "red");
             player.teleport(SettingsManager.spawn_red);
             Bukkit.broadcastMessage("§c" + player.getName() + " §evient de se reconnecter !");
             player.setPlayerListName("§c" + player.getName());
         }
-        if (team.equalsIgnoreCase("blue")) {
+        if (team.equals("blue")) {
             GameManager.team_blue.add(player.getUniqueId().toString());
             InvManager.sendStuff(player, "blue");
             player.teleport(SettingsManager.spawn_blue);
-            Bukkit.broadcastMessage("§9" + player.getName() + " §evient de se reconnecter !");
-            player.setPlayerListName("§9" + player.getName());
+            Bukkit.broadcastMessage("§3" + player.getName() + " §evient de se reconnecter !");
+            player.setPlayerListName("§3" + player.getName());
         }
         if (hasNoTeam(player) && !GameManager.spectators.contains(player.getUniqueId().toString()))
             addSpectator(player);
@@ -123,6 +137,9 @@ public class PlayerManager {
                 new BukkitRunnable() {
                     int i = 10;
                     public void run() {
+                        if (StateGame.getStatus() != StateGame.INGAME)
+                            cancel();
+
                         if (i == 0) {
                             Bukkit.broadcastMessage("§cLa partie est désormais terminé ! Raison: Abandon !");
 
@@ -133,7 +150,10 @@ public class PlayerManager {
                             }
                             GameManager.finishGame("blue");
                             cancel();
+                            return;
                         }
+                        if (i <= 5)
+                            Bukkit.broadcastMessage("§cFin de la partie dans " + i + " secondes !");
                         i--;
                     }
                 }.runTaskTimer(Main.instance, 0, 20);
@@ -146,9 +166,9 @@ public class PlayerManager {
     public void respawn(Player player) {
         if (StateGame.getStatus() == StateGame.INGAME) {
             player.getInventory().clear();
-            player.setHealth(20);
             PlayerManager.teleport(player);
-            SettingsManager.setGamerule(5 + 2);
+            player.setHealth(20);
+            ///SettingsManager.setGamerule(5 + 2);
         }
     }
 }

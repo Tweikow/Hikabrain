@@ -29,15 +29,16 @@ public class PlayerEvents implements Listener {
                 player.setFoodLevel(20);
                 PlayerManager.joinWaiting(player);
             }
-            if (StateGame.getStatus() == StateGame.INGAME)
-                PlayerManager.joinInGame(player);
+            if (StateGame.getStatus() == StateGame.INGAME) {
+                if (GameManager.team_red.contains(player.getUniqueId().toString()) || GameManager.team_blue.contains(player.getUniqueId().toString())) {
+                    PlayerManager.joinInGame(player);
+                    return;
+                }
+                PlayerManager.addSpectator(player);
+            }
             return;
         }
-        if (!GameManager.spectators.contains(player.getUniqueId().toString())) {
-            GameManager.spectators.add(player.getUniqueId().toString());
-            player.setGameMode(GameMode.SPECTATOR);
-        } else
-            player.setGameMode(GameMode.SPECTATOR);
+        PlayerManager.addSpectator(player);
     }
 
     @EventHandler
@@ -68,6 +69,8 @@ public class PlayerEvents implements Listener {
 
     @EventHandler
     public void damagePlayer(EntityDamageByEntityEvent event) {
+        if (GameManager.spectators.contains(event.getDamager().getUniqueId().toString()))
+            event.setCancelled(true);
         if (StateGame.getStatus().equals(StateGame.WAITING) || StateGame.getStatus().equals(StateGame.STARTING))
             event.setCancelled(true);
     }

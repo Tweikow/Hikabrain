@@ -70,8 +70,6 @@ public class GameManager {
     }
 
     public static void resetGame() {
-        SettingsManager.coordonates.clear();
-
         SettingsManager.removeBlocks();
         GameManager.breaks.clear();
         GameManager.places.clear();

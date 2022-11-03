@@ -34,10 +34,10 @@ public class InvManager {
             player.getInventory().setBoots(ItemBuilder.createLeather(Material.LEATHER_BOOTS, Color.RED));
         }
         if (team.equalsIgnoreCase("blue")) {
-            player.getInventory().setHelmet(ItemBuilder.createLeather(Material.LEATHER_HELMET, Color.BLUE));
-            player.getInventory().setChestplate(ItemBuilder.createLeather(Material.LEATHER_CHESTPLATE, Color.BLUE));
-            player.getInventory().setLeggings(ItemBuilder.createLeather(Material.LEATHER_LEGGINGS, Color.BLUE));
-            player.getInventory().setBoots(ItemBuilder.createLeather(Material.LEATHER_BOOTS, Color.BLUE));
+            player.getInventory().setHelmet(ItemBuilder.createLeather(Material.LEATHER_HELMET, Color.AQUA));
+            player.getInventory().setChestplate(ItemBuilder.createLeather(Material.LEATHER_CHESTPLATE, Color.AQUA));
+            player.getInventory().setLeggings(ItemBuilder.createLeather(Material.LEATHER_LEGGINGS, Color.AQUA));
+            player.getInventory().setBoots(ItemBuilder.createLeather(Material.LEATHER_BOOTS, Color.AQUA));
         }
     }
 }

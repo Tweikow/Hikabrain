@@ -99,8 +99,8 @@ public class SettingsManager {
             if (PlayerManager.hasNoTeam(player) && GameManager.team_blue.size() < (GameManager.waiting_max/2)) {
                 GameManager.team_blue.add(value);
                 GameManager.players.put(player.getUniqueId().toString(), "blue");
-                player.setPlayerListName("§9" + Bukkit.getPlayer(UUID.fromString(value)).getName());
-                player.sendMessage("§eVous avez rejoint l'équipe §7[§9Bleu§7]");
+                player.setPlayerListName("§3" + Bukkit.getPlayer(UUID.fromString(value)).getName());
+                player.sendMessage("§eVous avez rejoint l'équipe §7[§3Bleu§7]");
             }
             GameManager.waiting_players.remove(value);
         }
@@ -129,7 +129,7 @@ public class SettingsManager {
                 } else {
                     for (Player p : Bukkit.getOnlinePlayers())
                         p.sendTitle("§eLa partie commence !", "§c§lBonne chance !", 15, 30, 15);
-                    setGamerule(3);
+                    //setGamerule(3);
                     StateGame.setStatus(StateGame.INGAME);
                     cancel();
                 }

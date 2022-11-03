@@ -53,7 +53,7 @@ public class Hikabrain implements CommandExecutor {
                     if (args[2].equalsIgnoreCase("blue") || args[2].equalsIgnoreCase("red")) {
                         new SettingsManager().setSpawnTeam(player, args[2]);
                         if (args[2].equalsIgnoreCase("blue"))
-                            player.sendMessage("§eVous venez de définir le point d'apparition des §9Bleus");
+                            player.sendMessage("§eVous venez de définir le point d'apparition des §3Bleus");
                         if (args[2].equalsIgnoreCase("red"))
                             player.sendMessage("§eVous venez de définir le point d'apparition des §cRouges");
                     }

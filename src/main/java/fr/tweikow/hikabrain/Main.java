@@ -1,13 +1,9 @@
 package fr.tweikow.hikabrain;
 
 import fr.tweikow.hikabrain.commands.Hikabrain;
-import fr.tweikow.hikabrain.events.BlockManager;
-import fr.tweikow.hikabrain.events.ChatEvent;
-import fr.tweikow.hikabrain.events.PlayerEvents;
-import fr.tweikow.hikabrain.events.PlayerMove;
+import fr.tweikow.hikabrain.events.*;
 import fr.tweikow.hikabrain.managers.GameManager;
 import fr.tweikow.hikabrain.managers.SettingsManager;
-import fr.tweikow.hikabrain.managers.StateGame;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameRule;
@@ -36,6 +32,7 @@ public class Main extends JavaPlugin {
         Bukkit.getWorld(Main.instance.getConfig().getString("hikabrain.world")).setGameRule(GameRule.DO_IMMEDIATE_RESPAWN, true);
         Bukkit.getWorld(Main.instance.getConfig().getString("hikabrain.world")).setGameRule(GameRule.KEEP_INVENTORY, true);
 
+        Bukkit.getPluginManager().registerEvents(new Interact(), this);
         Bukkit.getPluginManager().registerEvents(new PlayerEvents(), this);
         Bukkit.getPluginManager().registerEvents(new PlayerMove(), this);
         Bukkit.getPluginManager().registerEvents(new ChatEvent(), this);
