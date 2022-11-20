@@ -11,6 +11,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.scheduler.BukkitRunnable;
 
 public class PlayerMove implements Listener {
 
@@ -30,7 +31,7 @@ public class PlayerMove implements Listener {
             if (GameManager.respawn.contains(player.getUniqueId().toString()))
                 event.setCancelled(true);
             if (player.getLocation().getBlockY() <= Main.instance.getConfig().getDouble("hikabrain.dead_zone"))
-                new PlayerManager().respawn(player);
+               new PlayerManager().respawn(player);
             if (block.getType() == Material.RED_WOOL && GameManager.team_blue.contains(player.getUniqueId().toString()))
                 GameManager.addScore("blue");
             if (block.getType() == Material.BLUE_WOOL && GameManager.team_red.contains(player.getUniqueId().toString()))

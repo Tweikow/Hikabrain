@@ -168,7 +168,22 @@ public class PlayerManager {
             player.getInventory().clear();
             PlayerManager.teleport(player);
             player.setHealth(20);
-            ///SettingsManager.setGamerule(5 + 2);
+            GameManager.respawn.add(player.getUniqueId().toString());
+            new BukkitRunnable() {
+                int time = 2;
+                @Override
+                public void run() {
+                    if (time > 0)
+                        time--;
+
+                    if (time == 0) {
+                        player.sendTitle("§eC'est repartit !", "§cMaintenant !", 10, 20, 10);
+                        GameManager.respawn.remove(player.getUniqueId().toString());
+                        cancel();
+                    }
+                    player.sendTitle("§eC'est repartit !", "§cDans " + time + " secondes", 10, 20, 10);
+                }
+            }.runTaskTimer(Main.instance, 0 ,20);
         }
     }
 }

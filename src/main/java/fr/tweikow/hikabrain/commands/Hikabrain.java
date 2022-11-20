@@ -11,22 +11,39 @@ import org.bukkit.entity.Player;
 
 public class Hikabrain implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (!(sender instanceof Player)) return false;
+        if (!(sender instanceof Player)) {
+            if (args[0].equalsIgnoreCase("start"))
+                SettingsManager.startingGame();
+            if (args[0].equalsIgnoreCase("restart"))
+                GameManager.restartGame();
+            if (args[0].equalsIgnoreCase("reload")) {
+                Main.instance.reloadConfig();
+                sender.sendMessage("§7[§6§lHikabrain§7] §8≫ §cLa config c'est bien rechargée !");
+                Main.instance.saveConfig();
+            }
+            return false;
+        }
         Player player = (Player) sender;
+
         if (!player.hasPermission(Main.instance.getConfig().getString("hikabrain.permission"))) {
             player.sendMessage(Main.instance.getConfig().getString("messages.no-permission").replace('&', '§'));
             return false;
         }
 
         if (args.length == 1) {
-            if (args[0].equalsIgnoreCase("join"))
-                PlayerManager.joinWaiting(player);
-            if (args[0].equalsIgnoreCase("leave"))
-                new PlayerManager().quit(player);
             if (args[0].equalsIgnoreCase("start"))
                 SettingsManager.startingGame();
             if (args[0].equalsIgnoreCase("restart"))
                 GameManager.restartGame();
+            if (args[0].equalsIgnoreCase("reload")) {
+                Main.instance.reloadConfig();
+                sender.sendMessage("§7[§6§lHikabrain§7] §8≫ §cLa config c'est bien rechargée !");
+                Main.instance.saveConfig();
+            }
+            if (args[0].equalsIgnoreCase("join"))
+                PlayerManager.joinWaiting(player);
+            if (args[0].equalsIgnoreCase("leave"))
+                new PlayerManager().quit(player);
             return false;
         }
         if (args.length == 2) {

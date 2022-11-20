@@ -29,6 +29,7 @@ messages:
     - "&8≫ &e/hikabrain leave &8≫ &7Permet de quitter la file d'attente"
     - "&8≫ &e/hikabrain start &8≫ &7Permet de lancer la partie"
     - "&8≫ &e/hikabrain restart &8≫ &7Permet de relancer la partie"
+    - "&8≫ &e/hikabrain reload &8≫ &7Permet de recharger la config"
     - "&8≫ &e/hikabrain set team <blue/red> &8≫ &7Permet de définir le point d'apparition des équipes"
     - "&8≫ &e/hikabrain set waiting &8≫ &7Permet de définir le point de la file d'attente"
     - "&8≫ &e/hikabrain set maxplayers <nombre> &8≫ &7Permet de définir le nombre maximum de joueur par equipe"

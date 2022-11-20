@@ -69,7 +69,7 @@ public class PlayerEvents implements Listener {
 
     @EventHandler
     public void damagePlayer(EntityDamageByEntityEvent event) {
-        if (GameManager.spectators.contains(event.getDamager().getUniqueId().toString()))
+        if (GameManager.spectators.contains(event.getDamager().getUniqueId().toString()) || StateGame.getStatus().equals(StateGame.FINISH))
             event.setCancelled(true);
         if (StateGame.getStatus().equals(StateGame.WAITING) || StateGame.getStatus().equals(StateGame.STARTING))
             event.setCancelled(true);
